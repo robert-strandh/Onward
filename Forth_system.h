@@ -9,8 +9,8 @@
 #define FORTH_SYSTEM_H_
 
 #include "F_Defs.h"
-#include "Main.h"
-#include "HW_words.h"
+//#include "Main.h"
+//#include "HW_words.h"
 #include "Forth_words.h"
 
 extern int BASE;
