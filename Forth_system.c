@@ -365,7 +365,8 @@ void Forth_interpreter(void)
     unsigned char i;
     static int Error_no =0;
     Stack_item temp2;
-    uint8_t uc_char;
+	unsigned char uc_char;
+    //uint8_t uc_char;
     //uint8_t uc_flag;
     
     switch (Forth_state){
