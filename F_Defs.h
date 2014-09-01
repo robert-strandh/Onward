@@ -10,7 +10,7 @@
 #define F_DEFS_H_
 
 #include <string.h>
-#include "asf.h"
+// #include "asf.h"
 
 /* Forth stacks */
 typedef union {
