@@ -16,16 +16,16 @@
 #define NEW_UPUTI
 
 Stack_item CSTACK[STACKSIZE];
-int CStack_pointer=0;
+int CStack_pointer = 0;
 
 #define RSTACKSIZE 32
 static Stack_item RSTACK[STACKSIZE];
-static int RStack_pointer=0;
+static int RStack_pointer = 0;
 
 #ifdef ENABLE_HEAP
 #define FHEAP_SIZE 1024
 static Stack_item Data_segment[FHEAP_SIZE];
-static Stack_item *Datapointer= Data_segment;
+static Stack_item *Datapointer = Data_segment;
 #endif
 
 static struct Entry_type *Hash_dictionary[HASHSIZE];
@@ -37,8 +37,8 @@ static unsigned char Cmdline_index;
 static char substring[CMD_LENGTH];
 
 /* Forth interpreter variables */
-int BASE =16;
-static int STATE =0;
+int BASE = 16;
+static int STATE = 0;
 static struct Entry_type *Compile_entry;
 
 
@@ -58,22 +58,22 @@ void uputi(int i, int base)
     }
 #else
     int temp;
-    char s[] ="0123456789abcdef";
+    char s[] = "0123456789abcdef";
     char temp2[16];
     
-    if (i ==0)
+    if (i == 0)
     putchar('0');
     else{
         if (i <0){
             putchar('-');
-            i =-i;
+            i = -i;
         }
-        for (temp =0; (i >=1) &&(temp <15);)
+        for (temp = 0; (i >= 1) &&(temp < 15);)
         {
-            temp2[temp++] =s[i %base];
-            i /=base;
+            temp2[temp++] = s[i %base];
+            i /= base;
         }
-        for (--temp; temp >=0; temp--)
+        for (--temp; temp >= 0; temp--)
         putchar(temp2[temp]);
     }
 #endif /* NEW_UPUTI */
@@ -82,7 +82,7 @@ void uputi(int i, int base)
 void Cpush(Stack_item param)
 //Push one stack item to the CSTACK
 {
-    CSTACK[CStack_pointer++] =param;
+    CSTACK[CStack_pointer++] = param;
 }
 
 Stack_item Cpop(void)
@@ -98,7 +98,7 @@ Stack_item Cpop(void)
 
 void Rpush(Stack_item param)
 {
-    RSTACK[RStack_pointer++] =param;
+    RSTACK[RStack_pointer++] = param;
 }
 
 Stack_item Rpop(void)
@@ -115,30 +115,30 @@ void Here(void) /* (- c-addr) */
 /* Push the next available data location on the stack */
 {
     Stack_item temp;
-    temp.default_ptr =Datapointer;
+    temp.default_ptr = Datapointer;
     Cpush(temp);
 }
 
 
 static int Get_number(char *chrstr, int base, int *errno)
 {
-    int temp1 =0, temp2 =1;
+    int temp1 = 0, temp2 = 1;
     int i;
-    *errno =0;
-    for (i =0; (*chrstr) !='\0';chrstr++, i++)
+    *errno = 0;
+    for (i = 0; (*chrstr) != '\0';chrstr++, i++)
         ;
-    for (--i, --chrstr; i >=0;i--)
+    for (--i, --chrstr; i >= 0;i--)
     {
-        if ((*chrstr >='0') &&(*chrstr <='9')){
-            temp1 +=((*chrstr--)-'0')*temp2;
-            temp2 *=base;
+        if ((*chrstr >= '0') &&(*chrstr <= '9')){
+            temp1 += ((*chrstr--)-'0')*temp2;
+            temp2 *= base;
         }
-        else if ((*chrstr >='a') &&(*chrstr <='f')){
-            temp1 +=((*chrstr--)-'a'+10)*temp2;
-            temp2 *=base;
+        else if ((*chrstr >= 'a') &&(*chrstr <= 'f')){
+            temp1 += ((*chrstr--)-'a'+10)*temp2;
+            temp2 *= base;
         }
         else            
-            *errno  =1;
+            *errno = 1;
     }       
     return temp1;               
 }
@@ -151,20 +151,20 @@ void If_then(void)
     int i;
     char temp;
     /* Get the true/false flag from the stack */
-    if (Cpop() ==-1) /* == true */{
+    if (Cpop() ==- 1) /* == true */{
         /* Discard leading characters blank and tab */
-        for (temp =Command_Line[Cmdline_index]; (temp =='\t')||(temp ==' '); temp =Command_Line[++Cmdline_index])
+        for (temp = Command_Line[Cmdline_index]; (temp == '\t')||(temp == ' '); temp = Command_Line[++Cmdline_index])
         ;
-        for (i =0; (temp != '\t') &&(temp !=' ') &&(temp !='\0');)
+        for (i = 0; (temp != '\t') &&(temp != ' ') &&(temp != '\0');)
         {
-            substring[i++] =temp;
-            temp =Command_Line[++Cmdline_index];
+            substring[i++] = temp;
+            temp = Command_Line[++Cmdline_index];
         }
-        if (i ==0)
-        Forth_state =4;
+        if (i == 0)
+        Forth_state = 4;
         else{
-            Wordstring[i] ='\0';
-            Current_word =Find_in_dict(&substring[0]);
+            Wordstring[i] = '\0';
+            Current_word = Find_in_dict(&substring[0]);
             if (Current_word != NULL)
             Current_word->funk();
             else{
@@ -182,31 +182,31 @@ static void Into_Hash(struct Entry_type *Entry)
 {
     /* Find which hash list to insert into and insert */
     /* as first element in the list */
-    int i =((int)(Entry->Name[0]) %HASHSIZE);
-    Entry->Previous_def =Hash_dictionary[i];
-    Hash_dictionary[i] =Entry;
+    int i = ((int)(Entry->Name[0]) %HASHSIZE);
+    Entry->Previous_def = Hash_dictionary[i];
+    Hash_dictionary[i] = Entry;
 }
 
 static void Init_hash(void)
 {
     int i;
     struct Entry_type *entry;
-    for (i =0; i <HASHSIZE;)
-    Hash_dictionary[i++] =NULL;
+    for (i = 0; i <HASHSIZE;)
+    Hash_dictionary[i++] = NULL;
     /* Add a test constant to the hash table */
-    entry =New_entry();
+    entry = New_entry();
     strcpy(entry->Name,"apa");
-    entry->parameter.i =127;
-    entry->Xtoken =0;
+    entry->parameter.i = 127;
+    entry->Xtoken = 0;
     Into_Hash(entry);
 }
 
 static struct Entry_type *Find_in_hash(char *chrstr)
 {
     struct Entry_type *entryptr;
-    for(entryptr =Hash_dictionary[(int)(*chrstr) %HASHSIZE]; entryptr != NULL; )
+    for(entryptr = Hash_dictionary[(int)(*chrstr) %HASHSIZE]; entryptr != NULL; )
     {
-        if (strncmp(entryptr->Name,chrstr,3) ==0)
+        if (strncmp(entryptr->Name,chrstr,3) == 0)
         return entryptr;
         entryptr = entryptr->Previous_def;
     }
@@ -219,19 +219,19 @@ static void Word(void)
     int i;
     Stack_item temp2;
     /* Discard leading characters blank and tab */
-    for (temp =Command_Line[Cmdline_index]; (temp =='\t')||(temp ==' '); temp =Command_Line[++Cmdline_index])
+    for (temp = Command_Line[Cmdline_index]; (temp == '\t')||(temp == ' '); temp = Command_Line[++Cmdline_index])
     ;
-    for (i =0; (temp != '\t') &&(temp !=' ') &&(temp !='\0');)
+    for (i = 0; (temp != '\t') &&(temp != ' ') &&(temp != '\0');)
     {
-        substring[i++] =temp;
-        temp =Command_Line[++Cmdline_index];
+        substring[i++] = temp;
+        temp = Command_Line[++Cmdline_index];
     }
-    if (i !=0){
-        substring[i] ='\0';
-        temp2.c_address =&substring[0];
+    if (i != 0){
+        substring[i] = '\0';
+        temp2.c_address = &substring[0];
     }
     else
-        temp2.c_address =NULL;
+        temp2.c_address = NULL;
     Cpush(temp2);
 }
 
@@ -240,13 +240,13 @@ static struct Entry_type *Create(void) /* (--) */
     char *tempname;
     struct Entry_type *entry;
     Word(); /* (n - n c_addr) */
-    if((tempname =Cpop().c_address) !=NULL){ /* */
-        entry =New_entry();
+    if((tempname = Cpop().c_address) != NULL){ /* */
+        entry = New_entry();
         strcpy(entry->Name,tempname);
-        /* entry->parameter.data =Datapointer++; */
-        entry->parameter.data =Datapointer;
+        /* entry->parameter.data = Datapointer++; */
+        entry->parameter.data = Datapointer;
         /* uputi(entry->parameter.i, BASE); */
-        entry->Xtoken =1;
+        entry->Xtoken = 1;
         Into_Hash(entry);
         return entry;
     }
@@ -257,7 +257,7 @@ static struct Entry_type *Create(void) /* (--) */
 static void allot(void) /* (u -) */
 /* Allocate 'u' number of bytes of data memory */
 {
-    Datapointer +=Cpop().n;
+    Datapointer += Cpop().n;
 }
 
 static void Const_word(void) /* (x -) */
@@ -267,9 +267,9 @@ static void Const_word(void) /* (x -) */
     //char *tempname;
     struct Entry_type *entry;
     
-    entry =Create();
-    entry->Xtoken =0;
-    entry->parameter.i =Cpop().n;
+    entry = Create();
+    entry->Xtoken = 0;
+    entry->parameter.i = Cpop().n;
 }
 
 static void Var_word(void)
@@ -279,14 +279,14 @@ static void Var_word(void)
     //char *tempname;
     struct Entry_type *entry;
     
-    entry =Create();
-    entry->Xtoken =1;
-    entry->parameter.data =Datapointer++; /* Allocate one cell for the variable */
+    entry = Create();
+    entry->Xtoken = 1;
+    entry->parameter.data = Datapointer++; /* Allocate one cell for the variable */
 }
 
 static void comma(void)
 {
-    *Datapointer++ =Cpop();
+    *Datapointer++ = Cpop();
 }
 
 static void Colon(void)
@@ -295,19 +295,19 @@ static void Colon(void)
 {
     //char *tempname;
     struct Entry_type *entry;
-    entry =Create();
-    entry->Xtoken =2;
-    entry->parameter.code =New_entry(); /*Add one element to the linked list */
-    entry->Previous_def =NULL;
-    Compile_entry =entry->parameter.code; /* Set the pointer to the new element */
-    STATE =-1;  
+    entry = Create();
+    entry->Xtoken = 2;
+    entry->parameter.code = New_entry(); /*Add one element to the linked list */
+    entry->Previous_def = NULL;
+    Compile_entry = entry->parameter.code; /* Set the pointer to the new element */
+    STATE = -1;  
 }
 
 static void Semicolon(void)
 /* Semicolon clear the STATE flag and causes the Forth VM to exit the compilation mode */
 /* and return to interpret mode */
 {
-    STATE =0;
+    STATE = 0;
 }
 
 static struct Wordtype {
@@ -377,21 +377,21 @@ static struct Wordtype {
 static struct Wordtype *Find_in_dict(char *chrstr)
 {
     struct Wordtype *wordptr;
-    for (wordptr =Dictionary; wordptr <(Dictionary+(sizeof(Dictionary)/sizeof(Dictionary[0])));wordptr++)
-        if (strncmp(wordptr->abbr,chrstr,3) ==0)
+    for (wordptr = Dictionary; wordptr <(Dictionary+(sizeof(Dictionary)/sizeof(Dictionary[0])));wordptr++)
+        if (strncmp(wordptr->abbr,chrstr,3) == 0)
             return wordptr;
     return NULL;
 }
 
 void Forth_interpreter(void)
 {
-    static unsigned char Forth_state =0;
+    static unsigned char Forth_state = 0;
     //char temp;
     //char *scrathpad, *c_address;
     struct Wordtype *Current_word;
     struct Entry_type *Current_entry;
     unsigned char i;
-    static int Error_no =0;
+    static int Error_no = 0;
     Stack_item temp2;
 	unsigned char uc_char;
     //uint8_t uc_char;
@@ -405,16 +405,16 @@ void Forth_interpreter(void)
         printf("Kernel v0.38 2014-01-06\n\r\n");
         printf("\n\r");
         Init_hash();
-        Forth_state =1;
+        Forth_state = 1;
     break;
     case 1:
         /* Forth_state1; Reset the text input */
-        Cmdline_index =0;
-        Forth_state =2;
+        Cmdline_index = 0;
+        Forth_state = 2;
     break;
     case 2:
         /* Forth_state2; Compile the command line string */
-        uc_char =getchar();
+        uc_char = getchar();
         //uc_char = 0;
         //uc_flag = uart_read(CONSOLE_UART, &uc_char);
         //if (!uc_flag) {
@@ -423,21 +423,21 @@ void Forth_interpreter(void)
             switch ((char)uc_char){
             case '\r':
             case '\n':
-                if (Cmdline_index !=0){
-                    Command_Line[Cmdline_index] ='\0';
-                    Cmdline_index =0;
-                    Forth_state =3;
+                if (Cmdline_index != 0){
+                    Command_Line[Cmdline_index] = '\0';
+                    Cmdline_index = 0;
+                    Forth_state = 3;
                 }
                 printf("\n\r");         
             break;
             case '\b':
-                if (Cmdline_index !=0)
+                if (Cmdline_index != 0)
                     Cmdline_index--;
                     printf("\b \b");
             break;          
             default: /* Echo character and insert into command string */
                 putchar(uc_char);
-                Command_Line[Cmdline_index++] =(char)uc_char;
+                Command_Line[Cmdline_index++] = (char)uc_char;
                 Cmdline_index %= CMD_LENGTH;
             break;
             }
@@ -446,34 +446,34 @@ void Forth_interpreter(void)
     break;
     case 3:
         /* Forth_state3; The command line in parsed and the different words are looked up in the dictionaries */
-        if (STATE ==0){ /* Compilation flag STATE ==0 means NOT in compilation mode */
+        if (STATE == 0){ /* Compilation flag STATE == 0 means NOT in compilation mode */
             Word();
-            if (Cpop().c_address ==NULL) /* NULL indicates the end of the command line */
-                Forth_state =4;
+            if (Cpop().c_address == NULL) /* NULL indicates the end of the command line */
+                Forth_state = 4;
             else{
                 /* Start with the hash dictionary for new word definitions */
-                if ((Current_entry =Find_in_hash(substring)) !=NULL)
+                if ((Current_entry = Find_in_hash(substring)) != NULL)
                     switch (Current_entry->Xtoken){
                     case 1:
                         /* Found a variable in 'heap'. Push a stack item that contains */
                         /* the address to the variable */
-                        temp2.a_address =(int *)(&(Current_entry->parameter));
+                        temp2.a_address = (int *)(&(Current_entry->parameter));
 #ifdef DEBUG_PRINT                      
                         printf("Address to variable: %lx \n\r", (uint32_t)temp2.a_address);
 #endif
                         Cpush(temp2);
                     break;
                     default: /* xt 0 */
-                        temp2.n =Current_entry->parameter.i;
+                        temp2.n = Current_entry->parameter.i;
                         /* uputi(temp2.n, BASE); */
                         Cpush(temp2);
                     break;
                     }
                 else
-                    if ((Current_word =Find_in_dict(substring)) != NULL)
+                    if ((Current_word = Find_in_dict(substring)) != NULL)
                         switch (Current_word->behavior){
                         case 1: /* Behaviour 1 is not used */
-                            //temp2.a_address =(int)(Current_word->behavior);
+                            //temp2.a_address = (int)(Current_word->behavior);
                         break;
                         case 6: /* Behavior 6 is not used */
                         
@@ -483,45 +483,45 @@ void Forth_interpreter(void)
                         break;
                         }
                     else{
-                        temp2.n =Get_number(substring, BASE, &Error_no);
+                        temp2.n = Get_number(substring, BASE, &Error_no);
                         Cpush(temp2);
                     }       
             }
         }           
-        else /* STATE ==-1 i.e VM is in compilation mode */
-            Forth_state =5;                     
+        else /* STATE == -1 i.e VM is in compilation mode */
+            Forth_state = 5;                     
     break;
     case 4:
         /* Forth_state4; Show the depth of the stack with N dots followed by "ok"*/
-        for (i =Cdepth(); i>0; i--)
+        for (i = Cdepth(); i>0; i--)
             putchar('.');
         printf(" ok \n\r\n\r");
-        Forth_state =1;
+        Forth_state = 1;
     break;
     case 5:
         /* Forth_state5; The virtual machine is now in compile mode. Compile each word into an */
         /* element of a single linked list */
         Word();
-        if ((Current_entry =Find_in_hash(substring)) !=NULL){
-            Compile_entry->parameter.code =Current_entry;
-            Compile_entry->Xtoken =Current_entry->Xtoken;
+        if ((Current_entry = Find_in_hash(substring)) != NULL){
+            Compile_entry->parameter.code = Current_entry;
+            Compile_entry->Xtoken = Current_entry->Xtoken;
         }
         else{
-            if ((Current_word =Find_in_dict(substring)) != NULL){
-                if (Current_word->behavior ==3){ /* Semicolon => Stop compiling */
-                    Forth_state =4;
+            if ((Current_word = Find_in_dict(substring)) != NULL){
+                if (Current_word->behavior == 3){ /* Semicolon => Stop compiling */
+                    Forth_state = 4;
                 }
                 else{                   
-                    Compile_entry->parameter.funk =Current_word->funk;
-                    Compile_entry->Xtoken =0;
+                    Compile_entry->parameter.funk = Current_word->funk;
+                    Compile_entry->Xtoken = 0;
                 }               
             }
             else{
-                Compile_entry->parameter.i =Get_number(substring, BASE, &Error_no);
-                Compile_entry->Xtoken =4;
+                Compile_entry->parameter.i = Get_number(substring, BASE, &Error_no);
+                Compile_entry->Xtoken = 4;
             }
         }
-        Compile_entry->Previous_def =New_entry();
+        Compile_entry->Previous_def = New_entry();
     break;
     case 6:
         /* Empty */
