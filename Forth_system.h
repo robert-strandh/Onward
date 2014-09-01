@@ -11,6 +11,8 @@
 #include "F_Defs.h"
 //#include "Main.h"
 //#include "HW_words.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include "Forth_words.h"
 
 extern int BASE;
