@@ -315,31 +315,59 @@ static struct Wordtype {
     void (*funk)(void);
     const char behavior;
 }   Dictionary[] =
-    {   {"revision", revision_info, 0}, {"hex", Hex, 0},
+    {   {"revision", revision_info, 0},
+		{"hex", Hex, 0},
         {"dec", DEC, 0},
         {".", Dot, 0},
         /* Stack manipulation words */
-        {"drop", Drop, 0}, {"dup", Dup, 0}, {"nip", Nip, 0},
-        {"over", Over, 0}, {"swap", Swap, 0},
+        {"drop", Drop, 0},
+		{"dup", Dup, 0},
+		{"nip", Nip, 0},
+        {"over", Over, 0},
+		{"swap", Swap, 0},
         /* Return stack manipulation words */
-        {">R", To_R, 0}, {"R>", R_from, 0}, {"R@", R_fetch, 0},
+        {">R", To_R, 0},
+		{"R>", R_from, 0},
+		{"R@", R_fetch, 0},
         /* Single precision math words */
-        {"/", Slash, 0}, {"*", Star, 0},{"-", Minus, 0}, {"+", Plus, 0},
-        {"/mod", Slash_mod, 0}, {"1+", One_plus, 0}, {"2+", Two_plus, 0},
-        {"1-", One_minus, 0}, {"2-",Two_minus, 0}, {"2*", Two_star, 0},  {"2/", Two_slash, 0},
+        {"/", Slash, 0},
+		{"*", Star, 0},
+		{"-", Minus, 0},
+		{"+", Plus, 0},
+        {"/mod", Slash_mod, 0},
+		{"1+", One_plus, 0},
+		{"2+", Two_plus, 0},
+        {"1-", One_minus, 0},
+		{"2-",Two_minus, 0},
+		{"2*", Two_star, 0},
+		{"2/", Two_slash, 0},
         /* Memory manipulation words */
-        {"c!", C_store, 0}, {"c@", C_fetch, 0},
-        {"dump", RAM_dump, 0}, {"@", Fetch, 0}, {"!", Store, 0},
+        {"c!", C_store, 0},
+		{"c@", C_fetch, 0},
+        {"dump", RAM_dump, 0},
+		{"@", Fetch, 0},
+		{"!", Store, 0},
         /* Logical and test words */
-        {"or", OR_bitwise, 0}, {"and", AND_bitwise, 0},
+        {"or", OR_bitwise, 0},
+		{"and", AND_bitwise, 0},
         /* Comparison and testing */
-        {"0=", Zero_equal, 0}, {"0<", Zero_less_than, 0}, {"0>", Zero_greater_than, 0},
-        {"0<>", Zero_not_equal, 0}, {"<", Less_than, 0}, {"=", Equal, 0},
+        {"0=", Zero_equal, 0},
+		{"0<", Zero_less_than, 0},
+		{"0>", Zero_greater_than, 0},
+        {"0<>", Zero_not_equal, 0},
+		{"<", Less_than, 0},
+		{"=", Equal, 0},
         /* Memory manipulation words */
-        {"allot", allot, 0}, {"constant", Const_word, 0}, {"variable", Var_word, 0},
-        {"cell+", Two_plus, 0}, {",", comma, 0}, {"c,", comma, 0}, {"here", Here, 0},
+        {"allot", allot, 0},
+		{"constant", Const_word, 0},
+		{"variable", Var_word, 0},
+        {"cell+", Two_plus, 0},
+		{",", comma, 0},
+		{"c,", comma, 0},
+		{"here", Here, 0},
         /* Defining (compilation ) words */
-        {":", Colon, 0}, {";", Semicolon, 3},
+        {":", Colon, 0},
+		{";", Semicolon, 3},
         /* Words defined in HW_words.c */
         HW_INTO_DICTIONARY
         /*Words that are not fully or incorrectly implemented */
