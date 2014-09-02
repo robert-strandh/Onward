@@ -68,7 +68,7 @@ void uputi(int i, int base)
             putchar('-');
             i = -i;
         }
-        for (temp = 0; (i >= 1) &&(temp < 15);)
+        for (temp = 0; (i >= 1) && (temp < 15);)
         {
             temp2[temp++] = s[i %base];
             i /= base;
@@ -88,7 +88,7 @@ void Cpush(Stack_item param)
 Stack_item Cpop(void)
 //Pop one stack item from the CSTACK
 {
-    if (CStack_pointer >0)
+    if (CStack_pointer > 0)
         return (CSTACK[--CStack_pointer]);
     else{
         printf("\n\rStack underflow!!\n\r");
@@ -125,16 +125,16 @@ static int Get_number(char *chrstr, int base, int *errno)
     int temp1 = 0, temp2 = 1;
     int i;
     *errno = 0;
-    for (i = 0; (*chrstr) != '\0';chrstr++, i++)
+    for (i = 0; (*chrstr) != '\0'; chrstr++, i++)
         ;
     for (--i, --chrstr; i >= 0;i--)
     {
-        if ((*chrstr >= '0') &&(*chrstr <= '9')){
+        if ((*chrstr >= '0') && (*chrstr <= '9')){
             temp1 += ((*chrstr--)-'0')*temp2;
             temp2 *= base;
         }
-        else if ((*chrstr >= 'a') &&(*chrstr <= 'f')){
-            temp1 += ((*chrstr--)-'a'+10)*temp2;
+        else if ((*chrstr >= 'a') && (*chrstr <= 'f')){
+            temp1 += ((*chrstr--) - 'a' + 10) * temp2;
             temp2 *= base;
         }
         else            
@@ -151,11 +151,11 @@ void If_then(void)
     int i;
     char temp;
     /* Get the true/false flag from the stack */
-    if (Cpop() ==- 1) /* == true */{
+    if (Cpop() == -1) /* == true */{
         /* Discard leading characters blank and tab */
         for (temp = Command_Line[Cmdline_index]; (temp == '\t')||(temp == ' '); temp = Command_Line[++Cmdline_index])
         ;
-        for (i = 0; (temp != '\t') &&(temp != ' ') &&(temp != '\0');)
+        for (i = 0; (temp != '\t') && (temp != ' ') && (temp != '\0');)
         {
             substring[i++] = temp;
             temp = Command_Line[++Cmdline_index];
@@ -166,7 +166,7 @@ void If_then(void)
             Wordstring[i] = '\0';
             Current_word = Find_in_dict(&substring[0]);
             if (Current_word != NULL)
-            Current_word->funk();
+            Current_word -> funk();
             else{
                 Cpush(Get_number(substring, BASE, Error_no));
     
@@ -182,8 +182,8 @@ static void Into_Hash(struct Entry_type *Entry)
 {
     /* Find which hash list to insert into and insert */
     /* as first element in the list */
-    int i = ((int)(Entry->Name[0]) %HASHSIZE);
-    Entry->Previous_def = Hash_dictionary[i];
+    int i = ((int)(Entry -> Name[0]) %HASHSIZE);
+    Entry -> Previous_def = Hash_dictionary[i];
     Hash_dictionary[i] = Entry;
 }
 
@@ -195,9 +195,9 @@ static void Init_hash(void)
     Hash_dictionary[i++] = NULL;
     /* Add a test constant to the hash table */
     entry = New_entry();
-    strcpy(entry->Name,"apa");
-    entry->parameter.i = 127;
-    entry->Xtoken = 0;
+    strcpy(entry -> Name,"apa");
+    entry -> parameter.i = 127;
+    entry -> Xtoken = 0;
     Into_Hash(entry);
 }
 
@@ -206,9 +206,9 @@ static struct Entry_type *Find_in_hash(char *chrstr)
     struct Entry_type *entryptr;
     for(entryptr = Hash_dictionary[(int)(*chrstr) %HASHSIZE]; entryptr != NULL; )
     {
-        if (strncmp(entryptr->Name,chrstr,3) == 0)
+        if (strncmp(entryptr -> Name,chrstr,3) == 0)
         return entryptr;
-        entryptr = entryptr->Previous_def;
+        entryptr = entryptr -> Previous_def;
     }
     return NULL;
 }
@@ -221,7 +221,7 @@ static void Word(void)
     /* Discard leading characters blank and tab */
     for (temp = Command_Line[Cmdline_index]; (temp == '\t')||(temp == ' '); temp = Command_Line[++Cmdline_index])
     ;
-    for (i = 0; (temp != '\t') &&(temp != ' ') &&(temp != '\0');)
+    for (i = 0; (temp != '\t') && (temp != ' ') && (temp != '\0');)
     {
         substring[i++] = temp;
         temp = Command_Line[++Cmdline_index];
@@ -242,11 +242,11 @@ static struct Entry_type *Create(void) /* (--) */
     Word(); /* (n - n c_addr) */
     if((tempname = Cpop().c_address) != NULL){ /* */
         entry = New_entry();
-        strcpy(entry->Name,tempname);
-        /* entry->parameter.data = Datapointer++; */
-        entry->parameter.data = Datapointer;
-        /* uputi(entry->parameter.i, BASE); */
-        entry->Xtoken = 1;
+        strcpy(entry -> Name,tempname);
+        /* entry -> parameter.data = Datapointer++; */
+        entry -> parameter.data = Datapointer;
+        /* uputi(entry -> parameter.i, BASE); */
+        entry -> Xtoken = 1;
         Into_Hash(entry);
         return entry;
     }
@@ -268,20 +268,20 @@ static void Const_word(void) /* (x -) */
     struct Entry_type *entry;
     
     entry = Create();
-    entry->Xtoken = 0;
-    entry->parameter.i = Cpop().n;
+    entry -> Xtoken = 0;
+    entry -> parameter.i = Cpop().n;
 }
 
 static void Var_word(void)
 /* Variable <name> creates a dictionary entry and allocates one cell of data for the variable */
-/* 'entry->parameter.data' is a pointer to a Stack_item in which parameter.i stores the data for the variable*/
+/* 'entry -> parameter.data' is a pointer to a Stack_item in which parameter.i stores the data for the variable*/
 {
     //char *tempname;
     struct Entry_type *entry;
     
     entry = Create();
-    entry->Xtoken = 1;
-    entry->parameter.data = Datapointer++; /* Allocate one cell for the variable */
+    entry -> Xtoken = 1;
+    entry -> parameter.data = Datapointer++; /* Allocate one cell for the variable */
 }
 
 static void comma(void)
@@ -296,10 +296,10 @@ static void Colon(void)
     //char *tempname;
     struct Entry_type *entry;
     entry = Create();
-    entry->Xtoken = 2;
-    entry->parameter.code = New_entry(); /*Add one element to the linked list */
-    entry->Previous_def = NULL;
-    Compile_entry = entry->parameter.code; /* Set the pointer to the new element */
+    entry -> Xtoken = 2;
+    entry -> parameter.code = New_entry(); /*Add one element to the linked list */
+    entry -> Previous_def = NULL;
+    Compile_entry = entry -> parameter.code; /* Set the pointer to the new element */
     STATE = -1;  
 }
 
@@ -378,7 +378,7 @@ static struct Wordtype *Find_in_dict(char *chrstr)
 {
     struct Wordtype *wordptr;
     for (wordptr = Dictionary; wordptr <(Dictionary+(sizeof(Dictionary)/sizeof(Dictionary[0])));wordptr++)
-        if (strncmp(wordptr->abbr,chrstr,3) == 0)
+        if (strncmp(wordptr -> abbr,chrstr,3) == 0)
             return wordptr;
     return NULL;
 }
@@ -453,33 +453,33 @@ void Forth_interpreter(void)
             else{
                 /* Start with the hash dictionary for new word definitions */
                 if ((Current_entry = Find_in_hash(substring)) != NULL)
-                    switch (Current_entry->Xtoken){
+                    switch (Current_entry -> Xtoken){
                     case 1:
                         /* Found a variable in 'heap'. Push a stack item that contains */
                         /* the address to the variable */
-                        temp2.a_address = (int *)(&(Current_entry->parameter));
+                        temp2.a_address = (int *)(&(Current_entry -> parameter));
 #ifdef DEBUG_PRINT                      
                         printf("Address to variable: %lx \n\r", (uint32_t)temp2.a_address);
 #endif
                         Cpush(temp2);
                     break;
                     default: /* xt 0 */
-                        temp2.n = Current_entry->parameter.i;
+                        temp2.n = Current_entry -> parameter.i;
                         /* uputi(temp2.n, BASE); */
                         Cpush(temp2);
                     break;
                     }
                 else
                     if ((Current_word = Find_in_dict(substring)) != NULL)
-                        switch (Current_word->behavior){
+                        switch (Current_word -> behavior){
                         case 1: /* Behaviour 1 is not used */
-                            //temp2.a_address = (int)(Current_word->behavior);
+                            //temp2.a_address = (int)(Current_word -> behavior);
                         break;
                         case 6: /* Behavior 6 is not used */
                         
                         break;
                         default: /* Behaviour 0 */
-                            Current_word->funk();
+                            Current_word -> funk();
                         break;
                         }
                     else{
@@ -503,25 +503,25 @@ void Forth_interpreter(void)
         /* element of a single linked list */
         Word();
         if ((Current_entry = Find_in_hash(substring)) != NULL){
-            Compile_entry->parameter.code = Current_entry;
-            Compile_entry->Xtoken = Current_entry->Xtoken;
+            Compile_entry -> parameter.code = Current_entry;
+            Compile_entry -> Xtoken = Current_entry -> Xtoken;
         }
         else{
             if ((Current_word = Find_in_dict(substring)) != NULL){
-                if (Current_word->behavior == 3){ /* Semicolon => Stop compiling */
+                if (Current_word -> behavior == 3){ /* Semicolon => Stop compiling */
                     Forth_state = 4;
                 }
                 else{                   
-                    Compile_entry->parameter.funk = Current_word->funk;
-                    Compile_entry->Xtoken = 0;
+                    Compile_entry -> parameter.funk = Current_word -> funk;
+                    Compile_entry -> Xtoken = 0;
                 }               
             }
             else{
-                Compile_entry->parameter.i = Get_number(substring, BASE, &Error_no);
-                Compile_entry->Xtoken = 4;
+                Compile_entry -> parameter.i = Get_number(substring, BASE, &Error_no);
+                Compile_entry -> Xtoken = 4;
             }
         }
-        Compile_entry->Previous_def = New_entry();
+        Compile_entry -> Previous_def = New_entry();
     break;
     case 6:
         /* Empty */
